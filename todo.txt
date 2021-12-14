@@ -1,0 +1,12 @@
+todo:
+
+implement vars DONE
+implement lists
+implement functions
+implement type system
+decide what to do about objects (side effects, mutability?) see thoughts below
+implement classes
+
+
+
+classes will work mainly with overloading. they 'overload' whatever functions they want, including ones taht don't exist. the objects can have properties accessable with the .prop syntax.
