@@ -1,6 +1,7 @@
 todo:
 
 implement vars DONE
+implement petunia type system in python
 implement lists
 implement functions
 implement type system
