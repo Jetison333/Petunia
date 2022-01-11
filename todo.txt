@@ -1,7 +1,7 @@
 todo:
 
 implement vars DONE
-start using github
+start using github DONE
 implement petunia type system in python
 implement lists
 implement functions
