@@ -1,7 +1,7 @@
 from token import Tokenizer, TokenType
 
 
-TokenConsumeCount = {'print' : 1, TokenType.IF : 3, TokenType.SET : 2, TokenType.LT : 2, TokenType.GT : 2, TokenType.PLUS : 2, TokenType.MUL : 2, TokenType.NUM : 0, TokenType.INDENT : 0, TokenType.DEDENT : 0}
+TokenConsumeCount = {'print' : 1, TokenType.IF : 3, TokenType.SET : 2, TokenType.LT : 2, TokenType.GT : 2, TokenType.PLUS : 2, TokenType.MUL : 2, TokenType.NUM : 0, TokenType.INDENT : 0, TokenType.DEDENT : 1, TokenType.APPEND : 2}
 
 class Expr():
     def __init__(self, token, subExpr):
@@ -62,8 +62,6 @@ class Parser():
 
     def parseExpr(self):
         token = self.advance()
-        if self.match(tokenType.SQOPEN):
-            return self.parseList()
         if token.type == TokenType.LIT:
             if token.literal in TokenConsumeCount:
                  count = TokenConsumeCount[token.literal]

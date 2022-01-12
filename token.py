@@ -27,9 +27,7 @@ class TokenType(Enum):
     INDENT = auto()
     DEDENT = auto()
 
-    SQOPEN = '['
-    SQCLOSE = ']'
-    LIST = auto()
+    APPEND = ','
 
 
 

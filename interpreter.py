@@ -57,12 +57,6 @@ def evalExpr(expr, enviroment):
         case TokenType.NUM, lit:
             return lit
 
-        case TokenType.LIST, lit:
-            lst = []
-            for item in expr.subExpr:
-                lst.append(evalExpr(item, enviroment))
-            return lst
-                    
         case TokenType.IF, _:
             if evalExpr(expr.subExpr[0], enviroment):
                 return evalExpr(expr.subExpr[1], enviroment)
