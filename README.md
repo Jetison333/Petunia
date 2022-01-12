@@ -7,6 +7,7 @@ the language is more functional than object oriented. functions can have no side
 
 some sytax examples:
 
+```
 print 'Hello World!'
 
 def fib Int <- Int n
@@ -14,6 +15,7 @@ def fib Int <- Int n
         n
         --
         + fib - n 1 fib - n 2
+```
         
 some notes about the fib function: if evaluates to the branch decided by < n 1 and the function returns that value. A function definition expects one expression and returns what that expresion evaluate to, meaning there isn't a explicit return command.
 
