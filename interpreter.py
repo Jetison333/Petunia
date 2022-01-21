@@ -1,4 +1,6 @@
 from parser import TokenType, Parser
+
+from enum import Enum, auto
 import sys
 
 class Enviroment():
@@ -17,7 +19,56 @@ class Enviroment():
             return self.parent[key]
 
     def __setitem__(self, key, val):
-        self.vars[key] = val 
+        self.vars[key] = val
+
+class VariableType(Enum):
+    INT = auto()
+    BOOL = auto()
+
+class Variable():
+    def __init__(self, type_, lit):
+        self.type = type_
+        self.lit = lit
+
+    def __repr__(self):
+        return str(self.lit)
+
+    def __bool__(self):
+        match self.type:
+            case VariableType.BOOL:
+                return self.lit
+            case other:
+                assert False, f"{other} can't be implicitly casted to bool"
+
+    def __add__(self, other):
+        match self.type:
+            case VariableType.INT:
+                return Variable(VariableType.INT, self.lit + other.lit)
+            case other:
+                assert False, f"{other} is unimplemented"
+
+    def __mul__(self, other):
+        match self.type:
+            case VariableType.INT:
+                return Variable(VariableType.INT, self.lit * other.lit)
+            case other:
+                assert False, f"{other} is unimplemented"
+
+    def __gt__(self, other):
+        match self.type:
+            case VariableType.INT:
+                return Variable(VariableType.BOOL, self.lit > other.lit)
+            case other:
+                assert False, f"{other} is unimplemented"
+
+    def __lt__(self, other):
+        match self.type:
+            case VariableType.INT:
+                return Variable(VariableType.BOOL, self.lit < other.lit)
+            case other:
+                assert False, f"{other} is unimplemented"
+
+
         
 def interpret(program):
     program = Parser(program).program
@@ -49,7 +100,7 @@ def evalExpr(expr, enviroment):
         
 
         case TokenType.NUM, lit:
-            return lit
+            return Variable(VariableType.INT, lit)
 
         case TokenType.IF, _:
             if evalExpr(expr.subExpr[0], enviroment):

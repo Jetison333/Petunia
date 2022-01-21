@@ -2,10 +2,12 @@ todo:
 
 implement vars DONE
 start using github DONE
-implement petunia type system in python
+implement petunia type system in python DONE
+switch tokentype specific operations from interpret to VaraibleType
+implement better errors
 implement lists
 implement functions
-implement type system
+implement strings
 decide what to do about objects (side effects, mutability?) see thoughts below
 implement classes
 
