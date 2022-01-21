@@ -33,42 +33,24 @@ class Variable():
     def __repr__(self):
         return str(self.lit)
 
-    def __bool__(self):
-        match self.type:
-            case VariableType.BOOL:
-                return self.lit
-            case other:
-                assert False, f"{other} can't be implicitly casted to bool"
-
-    def __add__(self, other):
+    def builtinOp(self, token, second):
         match self.type:
             case VariableType.INT:
-                return Variable(VariableType.INT, self.lit + other.lit)
-            case other:
-                assert False, f"{other} is unimplemented"
+                match token:
+                    case TokenType.PLUS:
+                        return Variable(VariableType.INT, self.lit + second[0].lit)
+                    case TokenType.MUL:
+                        return Variable(VariableType.INT, self.lit * second[0].lit)
+                    case TokenType.GT:
+                        return Variable(VariableType.BOOL, self.lit > second[0].lit)
+                    case TokenType.LT:
+                        return Variable(VariableType.BOOL, self.lit < second[0].lit)
 
-    def __mul__(self, other):
-        match self.type:
-            case VariableType.INT:
-                return Variable(VariableType.INT, self.lit * other.lit)
-            case other:
-                assert False, f"{other} is unimplemented"
-
-    def __gt__(self, other):
-        match self.type:
-            case VariableType.INT:
-                return Variable(VariableType.BOOL, self.lit > other.lit)
-            case other:
-                assert False, f"{other} is unimplemented"
-
-    def __lt__(self, other):
-        match self.type:
-            case VariableType.INT:
-                return Variable(VariableType.BOOL, self.lit < other.lit)
-            case other:
-                assert False, f"{other} is unimplemented"
-
-
+    def isTrue(self):
+        if self.type == VariableType.BOOL:
+            return self.lit
+        else:
+            assert false, f"Error: Can't implicitly case {self.type} to bool"
         
 def interpret(program):
     program = Parser(program).program
@@ -90,20 +72,15 @@ def evalExpr(expr, enviroment):
                     print(evalExpr(expr.subExpr[0], enviroment))
                 case varName:
                     return enviroment[varName]
-                
 
-        case TokenType.PLUS, _:
-            return evalExpr(expr.subExpr[0], enviroment) + evalExpr(expr.subExpr[1], enviroment)
-
-        case TokenType.MUL, _:
-            return evalExpr(expr.subExpr[0], enviroment) * evalExpr(expr.subExpr[1], enviroment)
-        
+        case (TokenType.PLUS | TokenType.MUL | TokenType.GT | TokenType.LT) as tokenType, _: #maybe change to [tokentype, _] if tokentype in operations syntax
+            return evalExpr(expr.subExpr[0], enviroment).builtinOp(tokenType, [evalExpr(x, enviroment) for x in expr.subExpr[1:]])
 
         case TokenType.NUM, lit:
             return Variable(VariableType.INT, lit)
 
         case TokenType.IF, _:
-            if evalExpr(expr.subExpr[0], enviroment):
+            if evalExpr(expr.subExpr[0], enviroment).isTrue():
                 return evalExpr(expr.subExpr[1], enviroment)
             else:
                 return evalExpr(expr.subExpr[2], enviroment)
@@ -111,13 +88,6 @@ def evalExpr(expr, enviroment):
         case TokenType.SET, _:
             key = expr.subExpr[0].token.literal
             enviroment[key] = evalExpr(expr.subExpr[1], enviroment)
-            
-
-        case TokenType.GT, _:
-            return evalExpr(expr.subExpr[0], enviroment) > evalExpr(expr.subExpr[1], enviroment)
-
-        case TokenType.LT, _:
-            return evalExpr(expr.subExpr[0], enviroment) < evalExpr(expr.subExpr[1], enviroment)
         
         case _, _:
             raise NotImplementedError(f'{expr.token.type} is not implemented')

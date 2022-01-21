@@ -3,7 +3,7 @@ todo:
 implement vars DONE
 start using github DONE
 implement petunia type system in python DONE
-switch tokentype specific operations from interpret to VaraibleType
+switch tokentype specific operations from interpret to VaraibleType DONE
 implement better errors
 implement lists
 implement functions
