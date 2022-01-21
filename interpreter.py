@@ -13,18 +13,12 @@ class Enviroment():
         if key in self.vars:
             return self.vars[key]
         else:
-            assert parent != None, f'Error {key} has not been defined'
-            return parent[key]
+            assert self.parent != None, f'Error {key} has not been defined'
+            return self.parent[key]
 
     def __setitem__(self, key, val):
-        env = self
-        while env != None and not key in env.vars:
-            env = env.parent
-        if env != None:
-            env.vars[key] = val
-        else:
-            self.vars[key] = val
-
+        self.vars[key] = val 
+        
 def interpret(program):
     program = Parser(program).program
     global_env = Enviroment()
@@ -43,8 +37,8 @@ def evalExpr(expr, enviroment):
             match literal:
                 case 'print':
                     print(evalExpr(expr.subExpr[0], enviroment))
-                case literal:
-                    return enviroment[literal]
+                case varName:
+                    return enviroment[varName]
                 
 
         case TokenType.PLUS, _:

@@ -50,9 +50,6 @@ class Parser():
             list.append(self.parseExpr())
         return Expr(Token(TokenType.LIST, loc, lst), [])
 
-    def parseFunctions(self):
-        pass
-        
     def parseBlock(self):
         self.match(TokenType.INDENT)
         block = []
@@ -79,7 +76,6 @@ class Parser():
         return Expr(token, subExpr)
     
     def parse(self):
-        self.parseFunctions()
         self.program = self.parseBlock()
 
 
