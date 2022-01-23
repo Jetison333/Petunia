@@ -1,7 +1,7 @@
 from token import Tokenizer, TokenType
 
 
-TokenConsumeCount = {'print' : 1, TokenType.IF : 3, TokenType.SET : 2, TokenType.LT : 2, TokenType.GT : 2, TokenType.PLUS : 2, TokenType.MUL : 2, TokenType.DIV : 2, TokenType.NUM : 0, TokenType.INDENT : 0, TokenType.DEDENT : 1, TokenType.APPEND : 2}
+TokenConsumeCount = {'print' : 1, TokenType.IF : 3, TokenType.WHILE : 2, TokenType.SET : 2, TokenType.LT : 2, TokenType.GT : 2, TokenType.PLUS : 2, TokenType.MUL : 2, TokenType.DIV : 2, TokenType.NUM : 0, TokenType.INDENT : 0, TokenType.DEDENT : 1, TokenType.APPEND : 2}
 
 class Expr():
     def __init__(self, token, subExpr):
@@ -65,6 +65,7 @@ class Parser():
             else:
                 count = 0
         else:
+            assert token.type in TokenConsumeCount, f"{token.type} is not in TokenConsumeCount, please add how many arguments it has"
             count = TokenConsumeCount[token.type]
 
         subExpr = []

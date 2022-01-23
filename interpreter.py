@@ -1,6 +1,7 @@
 from parser import TokenType, Parser
 
 from enum import Enum, auto
+from itertools import chain
 import sys
 
 class Enviroment():
@@ -11,6 +12,12 @@ class Enviroment():
             self.vars = {}
         self.parent = parent
 
+    def __iter__(self):
+        if self.parent != None:
+            return iter(chain(self.vars, self.parent.__iter__()))
+        else:
+            return iter(self.vars)
+
     def __getitem__(self, key):
         if key in self.vars:
             return self.vars[key]
@@ -19,7 +26,10 @@ class Enviroment():
             return self.parent[key]
 
     def __setitem__(self, key, val):
-        self.vars[key] = val
+        if self.parent != None and key in self.parent:
+            self.parent[key] = val
+        else:
+            self.vars[key] = val
 
 class VariableType(Enum):
     INT = auto()
@@ -88,7 +98,12 @@ def evalExpr(expr, enviroment):
                 return evalExpr(expr.subExpr[1], enviroment)
             else:
                 return evalExpr(expr.subExpr[2], enviroment)
-            
+
+        case TokenType.WHILE, _:
+            while evalExpr(expr.subExpr[0], enviroment).isTrue(expr.token.lineNum):
+                returnVal = evalExpr(expr.subExpr[1], enviroment)
+            return returnVal
+        
         case TokenType.SET, _:
             key = expr.subExpr[0].token.literal
             enviroment[key] = evalExpr(expr.subExpr[1], enviroment)

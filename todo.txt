@@ -4,7 +4,8 @@ implement vars DONE
 start using github DONE
 implement petunia type system in python DONE
 switch tokentype specific operations from interpret to VaraibleType DONE
-implement better errors
+implement better errors DONE
+implement while loops DONE
 implement lists
 implement functions
 implement strings
