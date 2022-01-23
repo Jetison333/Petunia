@@ -33,24 +33,28 @@ class Variable():
     def __repr__(self):
         return str(self.lit)
 
-    def builtinOp(self, token, second):
+    def builtinOp(self, token, second, lineNum):
         match self.type:
             case VariableType.INT:
+                assert second[0].type == VariableType.INT, f"Error: second operand of {token} can't be of type {second[0].type} at line {lineNum}"
                 match token:
                     case TokenType.PLUS:
                         return Variable(VariableType.INT, self.lit + second[0].lit)
                     case TokenType.MUL:
                         return Variable(VariableType.INT, self.lit * second[0].lit)
+                    case TokenType.DIV:
+                        assert second[0].lit != 0, f"Error: Can't divide by zero at line {lineNum}"
+                        return Variable(VariableType.INT, self.lit / second[0].lit)
                     case TokenType.GT:
                         return Variable(VariableType.BOOL, self.lit > second[0].lit)
                     case TokenType.LT:
                         return Variable(VariableType.BOOL, self.lit < second[0].lit)
 
-    def isTrue(self):
+    def isTrue(self, lineNum):
         if self.type == VariableType.BOOL:
             return self.lit
         else:
-            assert false, f"Error: Can't implicitly case {self.type} to bool"
+            assert False, f"Error: Can't implicitly case {self.type} to bool at line {lineNum}"
         
 def interpret(program):
     program = Parser(program).program
@@ -73,14 +77,14 @@ def evalExpr(expr, enviroment):
                 case varName:
                     return enviroment[varName]
 
-        case (TokenType.PLUS | TokenType.MUL | TokenType.GT | TokenType.LT) as tokenType, _: #maybe change to [tokentype, _] if tokentype in operations syntax
-            return evalExpr(expr.subExpr[0], enviroment).builtinOp(tokenType, [evalExpr(x, enviroment) for x in expr.subExpr[1:]])
+        case (TokenType.PLUS | TokenType.MUL | TokenType.DIV | TokenType.GT | TokenType.LT) as tokenType, _: #maybe change to [tokentype, _] if tokentype in operations syntax
+            return evalExpr(expr.subExpr[0], enviroment).builtinOp(tokenType, [evalExpr(x, enviroment) for x in expr.subExpr[1:]], expr.token.lineNum)
 
         case TokenType.NUM, lit:
             return Variable(VariableType.INT, lit)
 
         case TokenType.IF, _:
-            if evalExpr(expr.subExpr[0], enviroment).isTrue():
+            if evalExpr(expr.subExpr[0], enviroment).isTrue(expr.token.lineNum):
                 return evalExpr(expr.subExpr[1], enviroment)
             else:
                 return evalExpr(expr.subExpr[2], enviroment)
@@ -96,6 +100,10 @@ if __name__ == '__main__':
     if len(sys.argv) >= 2:
         with open(sys.argv[1]) as f:
             program = f.read()
-        interpret(program)
+        try:
+            interpret(program)
+        except AssertionError as error:
+            print(error)
+
 
 
