@@ -61,6 +61,10 @@ if __name__ == "__main__":
             with open('./tests/results.pickle', 'wb') as f:
                 pickle.dump(results_dict, f)
             print('[INFO] Successfully recorded all files')
+        elif sys.argv[1] == 'help':
+            print('[INFO] Run with no arguments to test everything in /tests directory')
+            print("[INFO] 'record' to record the output of all files")
+            print("[INFO] 'help' to see this page")
         else:
             print('[ERROR] Unrecognized command')
             exit()
