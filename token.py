@@ -48,10 +48,6 @@ class Tokenizer():
         self.line_num = 0
         self.parse()
 
-    def advance(self):
-        self.current += 1
-        return self.program[self.current-1]
-
     def addToken(self, typ, literal = None):
         self.tokens.append(Token(typ, self.line_num, literal))
 
