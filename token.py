@@ -52,11 +52,6 @@ class Tokenizer():
         self.current += 1
         return self.program[self.current-1]
 
-    def peek(self):
-        if self.current == len(self.program):
-            raise Exception("Unexpected EOF")
-        return self.program[self.current]
-
     def addToken(self, typ, literal = None):
         self.tokens.append(Token(typ, self.line_num, literal))
 
