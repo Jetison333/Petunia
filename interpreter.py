@@ -64,7 +64,7 @@ class Variable():
         if self.type == VariableType.BOOL:
             return self.lit
         else:
-            assert False, f"Error: Can't implicitly case {self.type} to bool at line {lineNum}"
+            assert False, f"Error: Can't implicitly cast {self.type} to bool at line {lineNum}"
         
 def interpret(program):
     program = Parser(program).program

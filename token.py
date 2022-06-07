@@ -61,11 +61,10 @@ class Tokenizer():
             if whitespace > stack[-1]:
                 stack.append(whitespace)
                 self.addToken(TokenType.INDENT)
-            elif whitespace < stack[-1]:
-                while whitespace < stack[-1]:
-                    stack.pop()
-                    self.addToken(TokenType.DEDENT)
-                assert whitespace == stack[-1], f'Error: inconsistent dedent at {self.line_num}'
+            while whitespace < stack[-1]:
+                stack.pop()
+                self.addToken(TokenType.DEDENT)
+            assert whitespace == stack[-1], f'Error: inconsistent dedent at {self.line_num}'
 
             for word in line.split():
                 if word == '--':
@@ -80,9 +79,9 @@ class Tokenizer():
                         else:
                             self.addToken(TokenType.LIT, word)
 
-        for _ in range(len(stack)-1):
+        for _ in stack:
             self.addToken(TokenType.DEDENT)
-        self.addToken(TokenType.DEDENT)
+
             
 
 def is_float(n):
