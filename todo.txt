@@ -6,8 +6,11 @@ implement petunia type system in python DONE
 switch tokentype specific operations from interpret to VaraibleType DONE
 implement better errors DONE
 implement while loops DONE
+implement types DONE
+implement integer vs regular division 
 implement lists
 implement functions
+implement comments
 implement strings
 decide what to do about objects (side effects, mutability?) see thoughts below
 implement classes
@@ -17,4 +20,9 @@ implement include or similar
 classes will work mainly with overloading. they 'overload' whatever functions they want, including ones taht don't exist. the objects can have properties accessable with the .prop syntax.
 
 ooorrrr classes won't work like that at all, and just be containers of data, and then you can still overload functions with particular type signatures. so you can still overload things like '+' with the particular type signature that you want.
+
+current types:
+int
+float
+and thats it
 

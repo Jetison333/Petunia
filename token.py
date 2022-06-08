@@ -2,9 +2,13 @@ from enum import Enum, auto
 import re
 
 class TokenType(Enum):
-    STRING = auto()
     LIT = auto()
     NUM = auto()
+
+    BOOL = 'bool'
+    STRING = 'string'
+    INT = 'int'
+    FLOAT = 'float'
     
     PLUS = '+'
     SUB = '-'
@@ -23,13 +27,14 @@ class TokenType(Enum):
     DEF = 'def'
     IF = 'if'
     WHILE = 'while'
+    
     SET = 'set'
+    NEW = 'new'
+    
     INDENT = auto()
     DEDENT = auto()
 
     APPEND = ','
-
-
 
 class Token():
     def __init__(self, typ, lineNum, literal = None):
@@ -74,8 +79,10 @@ class Tokenizer():
                     try:
                         self.addToken(TokenType(word))
                     except Exception:
-                        if is_float(word):
-                            self.addToken(TokenType.NUM, float(word))
+                        if is_int(word):
+                            self.addToken(TokenType.INT, int(word))
+                        elif is_float(word):
+                            self.addToken(TokenType.FLOAT, float(word))
                         else:
                             self.addToken(TokenType.LIT, word)
 
@@ -90,27 +97,10 @@ def is_float(n):
         return True
     except Exception:
         return False
-            
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def is_int(n):
+    try:
+        int(n)
+        return True
+    except Exception:
+        return False
