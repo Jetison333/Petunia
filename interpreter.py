@@ -91,8 +91,8 @@ class Variable():
                         return Variable(TokenType.BOOL, self.lit > second[0].lit)
                     case TokenType.LT:
                         return Variable(TokenType.BOOL, self.lit < second[0].lit)
-            case _:
-                raise NotImplemented('this type does not have implemented operations')
+            case other:
+                raise NotImplementedError(f'The type {other} does not have implemented operations')
 
     def isTrue(self, lineNum):
         if self.type == TokenType.BOOL:
@@ -150,6 +150,7 @@ def evalExpr(expr, enviroment):
 
         case TokenType.NEW, _:
             vartype = expr.subExpr[0].token.type
+            assert vartype != TokenType.LIT, f'Error: {vartype} is not a valid type at {expr.token.lineNum}'
             key = expr.subExpr[1].token.literal
             value = Variable(vartype, expr.subExpr[2].token.literal, expr.token.lineNum)
             enviroment[key] = value

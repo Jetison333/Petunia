@@ -7,7 +7,7 @@ switch tokentype specific operations from interpret to VaraibleType DONE
 implement better errors DONE
 implement while loops DONE
 implement types DONE
-implement integer vs regular division 
+implement integer vs regular division
 implement lists
 implement functions
 implement comments
@@ -24,5 +24,6 @@ ooorrrr classes won't work like that at all, and just be containers of data, and
 current types:
 int
 float
+bool
 and thats it
 
