@@ -71,7 +71,7 @@ class Variable():
                         return Variable(TokenType.INT, self.lit * second[0].lit)
                     case TokenType.DIV:
                         assert second[0].lit != 0, f"Error: Can't divide by zero at line {lineNum}"
-                        return Variable(TokenType.INT, self.lit / second[0].lit)
+                        return Variable(TokenType.INT, self.lit // second[0].lit)
                     case TokenType.GT:
                         return Variable(TokenType.BOOL, self.lit > second[0].lit)
                     case TokenType.LT:
