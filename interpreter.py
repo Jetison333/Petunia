@@ -62,16 +62,21 @@ class Variable():
         match self.type:
             case TokenType.INT:
                 if second[0].type == TokenType.FLOAT:
-                    return second[0].builtinOp(token, [self], lineNum)
-                assert second[0].type == TokenType.INT, f"Error: second operand of {token} can't be of type {second[0].type} at line {lineNum}"
+                    returnType = TokenType.FLOAT
+                else:
+                    returnType = TokenType.INT
+                assert second[0].type == TokenType.INT or second[0].type == TokenType.FLOAT, f"Error: second operand of {token} can't be of type {second[0].type} at line {lineNum}"
                 match token:
                     case TokenType.PLUS:
-                        return Variable(TokenType.INT, self.lit + second[0].lit)
+                        return Variable(returnType, self.lit + second[0].lit)
                     case TokenType.MUL:
-                        return Variable(TokenType.INT, self.lit * second[0].lit)
+                        return Variable(returnType, self.lit * second[0].lit)
                     case TokenType.DIV:
                         assert second[0].lit != 0, f"Error: Can't divide by zero at line {lineNum}"
-                        return Variable(TokenType.INT, self.lit // second[0].lit)
+                        if second[0].type == TokenType.INT:
+                            return Variable(returnType, self.lit // second[0].lit)
+                        else:
+                            return Variable(returnType, self.lit / second[0].lit)
                     case TokenType.GT:
                         return Variable(TokenType.BOOL, self.lit > second[0].lit)
                     case TokenType.LT:
