@@ -81,6 +81,8 @@ class Variable():
                         return Variable(TokenType.BOOL, self.lit > second[0].lit)
                     case TokenType.LT:
                         return Variable(TokenType.BOOL, self.lit < second[0].lit)
+                    case TokenType.EQUAL:
+                        return Variable(TokenType.BOOL, self.lit == second[0].lit)
                     
             case TokenType.FLOAT:
                 assert second[0].type == TokenType.INT or second[0].type == TokenType.FLOAT, f"Error: second operand of {token} can't be of type {second[0].type} at line {lineNum}"
@@ -96,6 +98,9 @@ class Variable():
                         return Variable(TokenType.BOOL, self.lit > second[0].lit)
                     case TokenType.LT:
                         return Variable(TokenType.BOOL, self.lit < second[0].lit)
+                    case TokenType.EQUAL:
+                        return Variable(TokenType.BOOL, self.lit == second[0].lit)
+
             case other:
                 raise NotImplementedError(f'The type {other} does not have implemented operations')
 
@@ -126,7 +131,7 @@ def evalExpr(expr, enviroment):
                 case varName:
                     return enviroment[varName]
 
-        case (TokenType.PLUS | TokenType.MUL | TokenType.DIV | TokenType.GT | TokenType.LT) as tokenType, _: #maybe change to [tokentype, _] if tokentype in operations syntax
+        case (TokenType.PLUS | TokenType.MUL | TokenType.DIV | TokenType.GT | TokenType.LT | TokenType.EQUAL) as tokenType, _: #maybe change to [tokentype, _] if tokentype in operations syntax
             return evalExpr(expr.subExpr[0], enviroment).builtinOp(tokenType, [evalExpr(x, enviroment) for x in expr.subExpr[1:]], expr.token.lineNum)
 
         case TokenType.INT, lit:
