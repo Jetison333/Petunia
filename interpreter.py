@@ -1,23 +1,10 @@
-from parser import TokenType, Parser
+from parser import Parser
+from TokenType import TokenType
 
-from enum import Enum, auto
+from utils import *
+
 from itertools import chain
 import sys
-
-def is_int(x):
-    try:
-        int(x)
-        return True
-    except:
-        return False
-
-def is_float(x):
-    try:
-        float(x)
-        return True
-    except:
-        return False
-
 
 class Enviroment():
     def __init__(self, parent = None, vars_ = None):

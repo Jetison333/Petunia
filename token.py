@@ -1,40 +1,8 @@
-from enum import Enum, auto
+from TokenType import TokenType
+
+from utils import *
+
 import re
-
-class TokenType(Enum):
-    LIT = auto()
-    NUM = auto()
-
-    BOOL = 'bool'
-    STRING = 'string'
-    INT = 'int'
-    FLOAT = 'float'
-    
-    PLUS = '+'
-    SUB = '-'
-    MUL = '*'
-    DIV = '/'
-    POW = '^'
-    MOD = '%'
-
-    EQUAL = '='
-    GT = '>'
-    LT = '<'
-    NOT = '!'
-    AND = '&'
-    OR = '|'
-
-    DEF = 'def'
-    IF = 'if'
-    WHILE = 'while'
-    
-    SET = 'set'
-    NEW = 'new'
-    
-    INDENT = auto()
-    DEDENT = auto()
-
-    APPEND = ','
 
 class Token():
     def __init__(self, typ, lineNum, literal = None):
@@ -90,17 +58,3 @@ class Tokenizer():
             self.addToken(TokenType.DEDENT)
 
             
-
-def is_float(n):
-    try:
-        float(n)
-        return True
-    except Exception:
-        return False
-
-def is_int(n):
-    try:
-        int(n)
-        return True
-    except Exception:
-        return False
