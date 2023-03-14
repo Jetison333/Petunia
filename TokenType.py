@@ -19,9 +19,9 @@ class TokenType(Enum):
     EQUAL = '='
     GT = '>'
     LT = '<'
-    NOT = '!'
-    AND = '&'
-    OR = '|'
+    NOT = 'not'
+    AND = 'and'
+    OR = 'or'
 
     DEF = 'def'
     IF = 'if'
