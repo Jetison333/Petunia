@@ -1,4 +1,4 @@
-from parser import Parser
+from parser_petunia import Parser
 from TokenType import TokenType
 
 from utils import *

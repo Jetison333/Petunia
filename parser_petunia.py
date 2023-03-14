@@ -1,4 +1,4 @@
-from token import Tokenizer
+from token_petunia import Tokenizer
 from TokenType import TokenType
 from token_consume_count import TokenConsumeCount
 

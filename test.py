@@ -13,7 +13,7 @@ def test_file(dire):
         print(f"[ERROR] {dire} has not been recorded")
         return False
     inp = results_dict[dire].input
-    output = str(sub.run("python3.10 interpreter.py " + "./tests/" + dire, shell=True, input = inp, stdout=sub.PIPE, stderr=sub.STDOUT).stdout, 'utf-8')
+    output = str(sub.run("python3.10 interpreter_petunia.py " + "./tests/" + dire, shell=True, input = inp, stdout=sub.PIPE, stderr=sub.STDOUT).stdout, 'utf-8')
     #print(output, results_dict[dire].output)
     if output == results_dict[dire].output:
         print(f"[INFO] {dire} passed")

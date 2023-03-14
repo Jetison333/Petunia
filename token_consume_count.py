@@ -1,4 +1,4 @@
-from token import TokenType
+from token_petunia import TokenType
 TokenConsumeCount = {
     'print' : 1,
     TokenType.IF : 3,
