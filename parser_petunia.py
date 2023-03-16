@@ -1,6 +1,6 @@
 from token_petunia import Tokenizer
 from TokenType import TokenType
-from token_consume_count import TokenConsumeCount
+from consume_count import tokenConsumeCount, litConsumeCount
 
 
 class Expr():
@@ -9,7 +9,7 @@ class Expr():
         self.subExpr = subExpr
 
     def __repr__(self):
-        return f"<Expr Object, token: {self.token}, subExpr: {self.subExpr}>"
+        return f"{{Expr Object, token: {self.token}, subExpr: {self.subExpr}}}"
 
 class Parser():
     def __init__(self, program):
@@ -43,13 +43,6 @@ class Parser():
         if self.peek().type != token:
             raise Exception("Expected '" + token.value + "' at line " + str(self.peek().lineNum) + " instead got '" + self.peek().type.value + "'")
 
-    def parseList(self):
-        loc = self.peek().loc
-        lst = []
-        while not self.match(TokenType.SQCLOSE):
-            list.append(self.parseExpr())
-        return Expr(Token(TokenType.LIST, loc, lst), [])
-
     def parseBlock(self):
         self.match(TokenType.INDENT)
         block = []
@@ -60,13 +53,13 @@ class Parser():
     def parseExpr(self):
         token = self.advance()
         if token.type == TokenType.LIT:
-            if token.literal in TokenConsumeCount:
-                 count = TokenConsumeCount[token.literal]
+            if token.literal in litConsumeCount:
+                 count = litConsumeCount[token.literal]
             else:
                 count = 0
         else:
-            assert token.type in TokenConsumeCount, f"{token.type} is not in TokenConsumeCount, please add how many arguments it has"
-            count = TokenConsumeCount[token.type]
+            assert token.type in tokenConsumeCount, f"{token.type} is not in TokenConsumeCount, please add how many arguments it has"
+            count = tokenConsumeCount[token.type]
 
         subExpr = []
         for _ in range(count):

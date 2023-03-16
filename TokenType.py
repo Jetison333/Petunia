@@ -8,6 +8,8 @@ class TokenType(Enum):
     STRING = 'string'
     INT = 'int'
     FLOAT = 'float'
+    ARRAY = 'array'
+    AT = 'at'
     
     PLUS = '+'
     SUB = '-'
@@ -28,6 +30,7 @@ class TokenType(Enum):
     WHILE = 'while'
     
     SET = 'set'
+    SETAT = 'setat'
     NEW = 'new'
     
     INDENT = auto()

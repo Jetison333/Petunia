@@ -11,7 +11,7 @@ class Token():
         self.lineNum = lineNum
 
     def __repr__(self):
-        return f'<Token Object, type = {self.type}, literal = {self.literal}>'
+        return f'{{Token Object, type = {self.type}, literal = {self.literal}}}'
 
 class Tokenizer():
     def __init__(self, program):

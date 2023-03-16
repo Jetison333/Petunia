@@ -39,7 +39,7 @@ def record_file(dire):
     else:
         inp = ''
 
-    output = str(sub.run("python3.10 interpreter.py " + "./tests/" +  dire, shell=True, input = inp, stdout=sub.PIPE, stderr=sub.STDOUT).stdout, 'utf-8')
+    output = str(sub.run("python3.10 interpreter_petunia.py " + "./tests/" +  dire, shell=True, input = inp, stdout=sub.PIPE, stderr=sub.STDOUT).stdout, 'utf-8')
 
     results_dict[dire] = InputOutput(inp, output)
     print(f'[INFO] recorded {dire}')

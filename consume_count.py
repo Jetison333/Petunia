@@ -1,11 +1,18 @@
 from token_petunia import TokenType
-TokenConsumeCount = {
-    'print' : 1,
+
+tokenConsumeCount = {
+    TokenType.INT : 0,
+    TokenType.FLOAT : 0,
+    TokenType.ARRAY : 1,
+
+    TokenType.AT : 2,
+
     TokenType.IF : 3,
     TokenType.WHILE : 2,
 
     TokenType.NEW : 3,
     TokenType.SET : 2, 
+    TokenType.SETAT : 3,
 
     TokenType.LT : 2,
     TokenType.GT : 2,
@@ -20,6 +27,9 @@ TokenConsumeCount = {
     TokenType.DEDENT : 1,
 
     TokenType.APPEND : 2,
-    TokenType.INT : 0,
-    TokenType.FLOAT : 0,
+}
+
+litConsumeCount = {
+    'print' : 1,
+    'make_array' : 2,
 }

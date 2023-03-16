@@ -1,0 +1,19 @@
+new array int arr make_array 10 0
+
+new int i 0
+
+while < i 10
+    print at arr i
+    set i + i 1
+
+set i 0
+
+while < i 10
+    setat arr i i
+    set i + i 1
+
+set i 0
+
+while < i 10
+    print at arr i
+    set i + i 1

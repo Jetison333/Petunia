@@ -1,9 +1,11 @@
 from parser_petunia import Parser
 from TokenType import TokenType
+from DataType import DataType
 
 from utils import *
 
 from itertools import chain
+from copy import deepcopy
 import sys
 
 class Enviroment():
@@ -35,14 +37,17 @@ class Enviroment():
 
 class Variable():
     def __init__(self, type_, lit, lineNum = -1):
-        self.type = type_
+        if (isinstance(type_, TokenType)):
+            self.type = DataType(type_)
+        else:
+            self.type = type_
         self.lit = lit
         match self.type:
             case TokenType.INT:
                 assert is_int(self.lit), f'Error: invalid literal for type int at line {lineNum}'
 
     def __repr__(self):
-        return f'<Variable object, type = {self.type}, literal = {self.lit}>'
+        return f'{{Variable object, type = {self.type}, literal = {self.lit}}}'
 
     def builtinOp(self, token, second, lineNum):
         #print(token,self,second)
@@ -115,8 +120,22 @@ def evalExpr(expr, enviroment):
             match literal:
                 case 'print':
                     print(evalExpr(expr.subExpr[0], enviroment).lit)
+                case 'make_array':
+                    length = evalExpr(expr.subExpr[0], enviroment)
+                    value = evalExpr(expr.subExpr[1], enviroment)
+                    array = []
+                    for _ in range(length.lit):
+                        array.append(deepcopy(value))
+                    return Variable(value.type.addArray(), array)
                 case varName:
                     return enviroment[varName]
+        
+        case TokenType.AT, _:
+            key = expr.subExpr[0].token.literal
+            array = enviroment[key]
+            index = evalExpr(expr.subExpr[1], enviroment)
+            assert 0 <= index.lit <= len(array.lit), "Error: index out of range"
+            return array.lit[index.lit]
 
         case (TokenType.PLUS | TokenType.MUL | TokenType.DIV | TokenType.GT | TokenType.LT | TokenType.EQUAL) as tokenType, _: #maybe change to [tokentype, _] if tokentype in operations syntax
             return evalExpr(expr.subExpr[0], enviroment).builtinOp(tokenType, [evalExpr(x, enviroment) for x in expr.subExpr[1:]], expr.token.lineNum)
@@ -145,11 +164,20 @@ def evalExpr(expr, enviroment):
             assert enviroment[key].type == value.type, f"Error: Can't implicitly cast {enviroment[key].type} to {value.type} at line {expr.token.lineNum}"
             enviroment[key] = value
 
+        case TokenType.SETAT, _:
+            key = expr.subExpr[0].token.literal
+            array = enviroment[key]
+            index = evalExpr(expr.subExpr[1], enviroment)
+            value = evalExpr(expr.subExpr[2], enviroment)
+            assert 0 <= index.lit <= len(array.lit), "Error: index out of range"
+            array.lit[index.lit] = value
+
         case TokenType.NEW, _:
-            vartype = expr.subExpr[0].token.type
+            vartype = DataType(expr.subExpr[0])
             assert vartype != TokenType.LIT, f'Error: {vartype} is not a valid type at {expr.token.lineNum}'
             key = expr.subExpr[1].token.literal
-            value = Variable(vartype, expr.subExpr[2].token.literal, expr.token.lineNum)
+            value = evalExpr(expr.subExpr[2], enviroment)
+            assert vartype == value.type, f'Error: type {vartype} mismatches type of assignment at {expr.token.lineNum}'
             enviroment[key] = value
         
         case _, _:
