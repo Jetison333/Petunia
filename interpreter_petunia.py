@@ -134,7 +134,7 @@ def evalExpr(expr, enviroment):
             key = expr.subExpr[0].token.literal
             array = enviroment[key]
             index = evalExpr(expr.subExpr[1], enviroment)
-            assert 0 <= index.lit <= len(array.lit), "Error: index out of range"
+            assert 0 <= index.lit < len(array.lit), "Error: index out of range"
             return array.lit[index.lit]
 
         case (TokenType.PLUS | TokenType.MUL | TokenType.DIV | TokenType.GT | TokenType.LT | TokenType.EQUAL) as tokenType, _: #maybe change to [tokentype, _] if tokentype in operations syntax
@@ -169,7 +169,7 @@ def evalExpr(expr, enviroment):
             array = enviroment[key]
             index = evalExpr(expr.subExpr[1], enviroment)
             value = evalExpr(expr.subExpr[2], enviroment)
-            assert 0 <= index.lit <= len(array.lit), "Error: index out of range"
+            assert 0 <= index.lit < len(array.lit), "Error: index out of range"
             array.lit[index.lit] = value
 
         case TokenType.NEW, _:

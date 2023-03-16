@@ -7,8 +7,8 @@ switch tokentype specific operations from interpret to VaraibleType DONE
 implement better errors DONE
 implement while loops DONE
 implement types DONE
-implement integer vs regular division
-implement lists
+implement integer vs regular division DONE
+implement lists DONE
 implement functions
 implement comments
 implement strings
