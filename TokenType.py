@@ -32,6 +32,9 @@ class TokenType(Enum):
     SET = 'set'
     SETAT = 'setat'
     NEW = 'new'
+
+    FUNC = 'func'
+    END = 'end'
     
     INDENT = auto()
     DEDENT = auto()

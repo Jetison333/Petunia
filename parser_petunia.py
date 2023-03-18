@@ -1,12 +1,17 @@
 from token_petunia import Tokenizer
 from TokenType import TokenType
+from DataType import DataType
 from consume_count import tokenConsumeCount, litConsumeCount
+from Function import Function
 
 
 class Expr():
-    def __init__(self, token, subExpr):
+    def __init__(self, token, subExpr = None):
         self.token = token
-        self.subExpr = subExpr
+        if subExpr == None:
+            self.subExpr = []
+        else:
+            self.subExpr = subExpr
 
     def __repr__(self):
         return f"{{Expr Object, token: {self.token}, subExpr: {self.subExpr}}}"
@@ -41,7 +46,7 @@ class Parser():
 
     def asser(self, token):
         if self.peek().type != token:
-            raise Exception("Expected '" + token.value + "' at line " + str(self.peek().lineNum) + " instead got '" + self.peek().type.value + "'")
+            raise Exception("Expected '" + str(token.value) + "' at line " + str(self.peek().lineNum) + " instead got '" + str(self.peek().type.value) + "'")
 
     def parseBlock(self):
         self.match(TokenType.INDENT)
@@ -50,7 +55,35 @@ class Parser():
             block.append(self.parseExpr())
         return block
 
+    def parseFunc(self): #consumes a type, literal, type literal, type literal, until end alseo needs to add number of arguments to litConsumeCount
+        numArgs = 0
+        args = []
+
+        funcType = self.parseExpr()
+        linenum = self.peek().lineNum
+        self.asser(TokenType.LIT)
+        funcName = self.advance().literal
+
+        while not self.match(TokenType.END):
+            first = DataType(self.parseExpr())
+            self.asser(TokenType.LIT)
+            second = self.advance().literal
+            args.append((first, second))
+            numArgs += 1
+
+        litConsumeCount[funcName] = numArgs
+        
+        if self.check(TokenType.INDENT):
+            body = self.parseBlock()
+        else:
+            body = self.parseExpr()
+
+        return Function(funcName, funcType, args, body, linenum)
+
     def parseExpr(self):
+        if self.match(TokenType.FUNC):
+            return self.parseFunc()
+
         token = self.advance()
         if token.type == TokenType.LIT:
             if token.literal in litConsumeCount:

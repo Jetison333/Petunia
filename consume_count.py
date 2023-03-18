@@ -19,6 +19,7 @@ tokenConsumeCount = {
     TokenType.EQUAL : 2,
 
     TokenType.PLUS : 2,
+    TokenType.SUB : 2,
     TokenType.MUL : 2,
     TokenType.DIV : 2,
     TokenType.NUM : 0,

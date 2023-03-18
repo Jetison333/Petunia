@@ -1,4 +1,5 @@
-from parser_petunia import Parser
+from parser_petunia import Parser, Expr
+from Function import Function
 from TokenType import TokenType
 from DataType import DataType
 
@@ -35,6 +36,17 @@ class Enviroment():
         else:
             self.vars[key] = val
 
+    def additem(self, key, val):
+        self.vars[key] = val
+
+    def __repr__(self):
+        retstring = f'{{Enviroment object, {{'
+        for x in self:
+            retstring += f"{x} : {self[x]},"
+        retstring += "}}}}"
+        return retstring
+
+
 class Variable():
     def __init__(self, type_, lit, lineNum = -1):
         if (isinstance(type_, TokenType)):
@@ -61,6 +73,8 @@ class Variable():
                 match token:
                     case TokenType.PLUS:
                         return Variable(returnType, self.lit + second[0].lit)
+                    case TokenType.SUB:
+                        return Variable(returnType, self.lit - second[0].lit)
                     case TokenType.MUL:
                         return Variable(returnType, self.lit * second[0].lit)
                     case TokenType.DIV:
@@ -128,8 +142,14 @@ def evalExpr(expr, enviroment):
                         array.append(deepcopy(value))
                     return Variable(value.type.addArray(), array)
                 case varName:
-                    return enviroment[varName]
-        
+                    result = enviroment[varName]
+                    if isinstance(result, Function):
+                        args = [evalExpr(i, enviroment) for i in expr.subExpr]
+                        newEnviroment = result.bindArgs(Enviroment(enviroment), args)
+                        return evalExpr(result.body, newEnviroment)
+                    else:
+                        return result
+
         case TokenType.AT, _:
             key = expr.subExpr[0].token.literal
             array = enviroment[key]
@@ -137,7 +157,7 @@ def evalExpr(expr, enviroment):
             assert 0 <= index.lit < len(array.lit), "Error: index out of range"
             return array.lit[index.lit]
 
-        case (TokenType.PLUS | TokenType.MUL | TokenType.DIV | TokenType.GT | TokenType.LT | TokenType.EQUAL) as tokenType, _: #maybe change to [tokentype, _] if tokentype in operations syntax
+        case (TokenType.PLUS | TokenType.SUB | TokenType.MUL | TokenType.DIV | TokenType.GT | TokenType.LT | TokenType.EQUAL) as tokenType, _: #maybe change to [tokentype, _] if tokentype in operations syntax
             return evalExpr(expr.subExpr[0], enviroment).builtinOp(tokenType, [evalExpr(x, enviroment) for x in expr.subExpr[1:]], expr.token.lineNum)
 
         case TokenType.INT, lit:
@@ -178,7 +198,10 @@ def evalExpr(expr, enviroment):
             key = expr.subExpr[1].token.literal
             value = evalExpr(expr.subExpr[2], enviroment)
             assert vartype == value.type, f'Error: type {vartype} mismatches type of assignment at {expr.token.lineNum}'
-            enviroment[key] = value
+            enviroment.additem(key, value)
+
+        case TokenType.FUNC, literal:
+            enviroment[expr.name] = expr
         
         case _, _:
             raise NotImplementedError(f'{expr.token.type} is not implemented')

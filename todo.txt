@@ -9,9 +9,10 @@ implement while loops DONE
 implement types DONE
 implement integer vs regular division DONE
 implement lists DONE
-implement functions
+implement functions DONE
 implement comments
 implement strings
+implement early return
 decide what to do about objects (side effects, mutability?) see thoughts below
 implement classes
 implement include or similar

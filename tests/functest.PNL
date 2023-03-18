@@ -1,0 +1,7 @@
+
+func int add int a int b end
+    + a b
+
+print add 1 2
+
+print add add 4 5 6
