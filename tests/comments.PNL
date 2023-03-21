@@ -1,0 +1,7 @@
+new int i 10 #sets i to ten
+#middle comment thingy
+
+if > i 10
+    print i #prints i if i is greater than 10
+
+print 10

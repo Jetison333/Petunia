@@ -29,6 +29,9 @@ class Tokenizer():
         self.addToken(TokenType.INDENT)
         for line_num, line in enumerate(self.program):
             self.line_num = line_num + 1
+
+            if not line or line.isspace() or line.lstrip(' ')[0] == '#':
+                continue
             
             whitespace = len(line) - len(line.lstrip(' '))
             if whitespace > stack[-1]:
@@ -40,6 +43,8 @@ class Tokenizer():
             assert whitespace == stack[-1], f'Error: inconsistent dedent at {self.line_num}'
 
             for word in line.split():
+                if word[0] == "#":
+                    break
                 if word == '--':
                     self.addToken(TokenType.DEDENT)
                     self.addToken(TokenType.INDENT)
