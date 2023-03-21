@@ -31,7 +31,9 @@ class Enviroment():
             return self.parent[key]
 
     def __setitem__(self, key, val):
-        if self.parent != None and key in self.parent:
+        if key in self.vars:
+            self.vars[key] = val
+        elif self.parent != None and key in self.parent:
             self.parent[key] = val
         else:
             self.vars[key] = val
@@ -40,12 +42,16 @@ class Enviroment():
         self.vars[key] = val
 
     def __repr__(self):
-        retstring = f'{{Enviroment object, {{'
-        for x in self:
-            retstring += f"{x} : {self[x]},"
-        retstring += "}}}}"
-        return retstring
-
+        str = 'Locals:\n'
+        for key in self.vars:
+            str += f"\t{key} : {self.vars[key]}\n"
+            
+        if self.parent != None:
+            str += "globals:\n"
+            for key in self.parent:
+                str += f"\t{key} : {self.parent[key]}\n"
+        
+        return str
 
 class Variable():
     def __init__(self, type_, lit, lineNum = -1):
@@ -83,6 +89,8 @@ class Variable():
                             return Variable(returnType, self.lit // second[0].lit)
                         else:
                             return Variable(returnType, self.lit / second[0].lit)
+                    case TokenType.MOD:
+                        return Variable(TokenType.INT, self.lit % second[0].lit)
                     case TokenType.GT:
                         return Variable(TokenType.BOOL, self.lit > second[0].lit)
                     case TokenType.LT:
@@ -157,7 +165,7 @@ def evalExpr(expr, enviroment):
             assert 0 <= index.lit < len(array.lit), "Error: index out of range"
             return array.lit[index.lit]
 
-        case (TokenType.PLUS | TokenType.SUB | TokenType.MUL | TokenType.DIV | TokenType.GT | TokenType.LT | TokenType.EQUAL) as tokenType, _: #maybe change to [tokentype, _] if tokentype in operations syntax
+        case (TokenType.PLUS | TokenType.SUB | TokenType.MUL | TokenType.DIV | TokenType.MOD | TokenType.GT | TokenType.LT | TokenType.EQUAL) as tokenType, _: #maybe change to [tokentype, _] if tokentype in operations syntax
             return evalExpr(expr.subExpr[0], enviroment).builtinOp(tokenType, [evalExpr(x, enviroment) for x in expr.subExpr[1:]], expr.token.lineNum)
 
         case TokenType.INT, lit:
@@ -172,7 +180,23 @@ def evalExpr(expr, enviroment):
             else:
                 return evalExpr(expr.subExpr[2], enviroment)
 
+        case TokenType.NOT, _:
+            return Variable(TokenType.BOOL, not evalExpr(expr.subExpr[0], enviroment).isTrue(expr.token.lineNum))
+
+        case TokenType.AND, _:
+            if evalExpr(expr.subExpr[0], enviroment).isTrue(expr.token.lineNum):
+                return evalExpr(expr.subExpr[1], enviroment)
+            else:
+                return Variable(TokenType.BOOL, False)
+
+        case TokenType.OR, _:
+            if evalExpr(expr.subExpr[0], enviroment).isTrue(expr.token.lineNum):
+                return Variable(TokenType.BOOL, True)
+            else:
+                return evalExpr(expr.subExpr[1], enviroment)
+
         case TokenType.WHILE, _:
+            returnVal = None
             while evalExpr(expr.subExpr[0], enviroment).isTrue(expr.token.lineNum):
                 returnVal = evalExpr(expr.subExpr[1], enviroment)
             return returnVal
@@ -202,7 +226,10 @@ def evalExpr(expr, enviroment):
 
         case TokenType.FUNC, literal:
             enviroment[expr.name] = expr
-        
+
+        case TokenType.DEBUG, _:
+            print(enviroment)
+
         case _, _:
             raise NotImplementedError(f'{expr.token.type} is not implemented')
 

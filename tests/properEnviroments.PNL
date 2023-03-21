@@ -1,0 +1,10 @@
+func int bug int n end
+    new int i 0
+    while < i n
+        set i + i 1
+    i
+
+new int i 1
+
+print bug 10
+print i

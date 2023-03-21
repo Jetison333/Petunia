@@ -40,3 +40,4 @@ class TokenType(Enum):
     DEDENT = auto()
 
     APPEND = ','
+    DEBUG = 'DEBUG'
