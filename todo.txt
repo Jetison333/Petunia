@@ -10,7 +10,7 @@ implement types DONE
 implement integer vs regular division DONE
 implement lists DONE
 implement functions DONE
-implement comments
+implement comments DONE
 implement strings
 implement early return
 implement generics

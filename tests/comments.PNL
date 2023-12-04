@@ -3,5 +3,6 @@ new int i 10 #sets i to ten
 
 if > i 10
     print i #prints i if i is greater than 10
+    # space is fine, and further # is fine too
 
 print 10
